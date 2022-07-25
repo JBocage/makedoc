@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from distutils.command.config import config
 import json
-from typing import Union, List
+from typing import Optional, Union, List
 import pathlib
 from makedoc import __VERSION__
 
@@ -22,10 +22,26 @@ class MakedocPaths:
         self.ignored_extensions = config / "makedoc.ignored_extensions"
         self.files_naming = config / "makedoc.files_naming.json"
 
+        self._unpacked_doc_file_name: Optional[str] = None
+        self._autodoc_file_name: Optional[str] = None
+
+    def _read_files_naming(self):
         with open(self.files_naming, "r") as f:
             files_naming = json.load(f)
-            self.unpacked_doc_file_name = files_naming["unpacked_doc_file_name"]
-            self.autodoc_file_name = files_naming["autodoc_file_name"]
+            self._unpacked_doc_file_name = files_naming["unpacked_doc_file_name"]
+            self._autodoc_file_name = files_naming["autodoc_file_name"]
+
+    @property
+    def unpacked_doc_file_name(self) -> str:
+        if self._unpacked_doc_file_name is None:
+            self._read_files_naming()
+        return self._unpacked_doc_file_name
+
+    @property
+    def autodoc_file_name(self) -> str:
+        if self._autodoc_file_name is None:
+            self._read_files_naming()
+        return self._autodoc_file_name
 
 
 class ParserAbstract(ABC):
