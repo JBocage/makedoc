@@ -1,3 +1,4 @@
+import json
 from makedoc.parsers.concept.parser_abstract import MakedocPaths
 from .directory_parser import DirectoryParser
 
@@ -24,7 +25,20 @@ class SourceDirectoryParser(DirectoryParser):
                 f.write("{\n}")
         self.makedoc_paths.config.mkdir(exist_ok=True)  # Create the config folder
 
-        # Ignroed files and directories initialisation
+        if not self.makedoc_paths.files_naming.exists():
+            with open(self.makedoc_paths.files_naming, "w+") as f:
+                json.dump(
+                    {
+                        "unpacked_doc_file_name": "dirdoc.makedoc.md",
+                        "autodoc_file_name": "README.md",
+                    },
+                    f,
+                    indent=4,
+                    sort_keys=True,
+                    separators=(",", ": "),
+                )
+
+        # Ignored files and directories initialisation
         if not self.makedoc_paths.ignored_path.exists():
             with open(self.makedoc_paths.ignored_path, "w+") as f:
                 f.write(

@@ -20,8 +20,9 @@ class MakedocPaths:
         self.ignored_path = config / "makedoc.ignored_paths"
         self.ignored_every = config / "makedoc.ignore_every"
         self.ignored_extensions = config / "makedoc.ignored_extensions"
+        self.files_naming = config / "makedoc.files_naming.json"
 
-        with open(config / "makedoc.files_naming.json", "r") as f:
+        with open(self.files_naming, "r") as f:
             files_naming = json.load(f)
             self.unpacked_doc_file_name = files_naming["unpacked_doc_file_name"]
             self.autodoc_file_name = files_naming["autodoc_file_name"]
