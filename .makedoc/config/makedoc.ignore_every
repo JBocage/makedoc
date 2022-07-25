@@ -1,0 +1,14 @@
+###################################################
+# This file shall contain all ignored directories
+# and files for this project.
+# 
+# Every location or directory which name matches one
+# that is provided here shall be ignored
+###################################################
+
+README.md
+__pycache__
+makedoc.egg-info
+
+###################################################
+# AUTO ADDED:

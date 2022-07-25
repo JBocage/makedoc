@@ -1,0 +1,10 @@
+###################################################
+# This file shall contain all ignored file 
+# extensions for this project.
+# 
+# Every file the extension of which matches one
+# that is provided here shall be ignored
+###################################################
+
+pdf
+txt

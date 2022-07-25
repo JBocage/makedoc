@@ -1,0 +1,17 @@
+###################################################
+# This file shall contain all ignored directories
+# and files for this project.
+# 
+# Every path that matches those relative or absolute
+# paths are to be ignored in both structure representation
+# and README documentation.
+###################################################
+
+venv
+.idea
+.git
+.makedoc
+doc/imgs/
+
+###################################################
+# AUTO ADDED:
