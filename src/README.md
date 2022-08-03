@@ -8,17 +8,28 @@
 src/
 └── makedoc/
     ├── cli/
+    │   ├── commands/
+    │   │   ├── bash_scripts/
+    │   │   │   └── source_for_bash_completion.sh
+    │   │   ├── __init__.py
+    │   │   ├── config.py
+    │   │   ├── generate.py
+    │   │   ├── init.py
+    │   │   ├── pack.py
+    │   │   ├── unpack.py
+    │   │   └── update.py
+    │   ├── __init__.py
     │   └── main.py
     ├── parsers/
     │   ├── concept/
     │   │   ├── __init__.py
     │   │   ├── file_parser_abstract.py
     │   │   └── parser_abstract.py
+    │   ├── __init__.py
     │   ├── directory_parser.py
     │   ├── pyscript_parser.py
     │   └── source_directory_parser.py
-    ├── __init__.py
-    └── main.py
+    └── __init__.py
 ```
 <hr style="border:2px solid gray"> </hr>
 
@@ -31,4 +42,4 @@ src/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  07/25/22 09:46:45 
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/03/22 20:51:03 

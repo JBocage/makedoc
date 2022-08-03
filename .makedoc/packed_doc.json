@@ -1,8 +1,10 @@
 {
-    "": "# makedoc\n\nThis is some doc !!",
+    "": "# makedoc\n\nThis is some doc !!\n\nUpdateed !",
     "src": "# src\n",
     "src/makedoc": "# makedoc\n",
     "src/makedoc/cli": "# cli\n",
+    "src/makedoc/cli/commands": "# commands\n",
+    "src/makedoc/cli/commands/bash_scripts": "# bash_scripts\n",
     "src/makedoc/parsers": "# parsers\n",
     "src/makedoc/parsers/concept": "# concept\n"
 }
