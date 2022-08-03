@@ -57,4 +57,5 @@ setup(
     #
     # In this case, 'data_file' will be installed into '<sys.prefix>/data'
     entry_points={"console_scripts": ["makedoc = makedoc.cli.main:cli"]},
+    include_package_data=True,
 )
