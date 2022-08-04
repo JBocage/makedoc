@@ -1,5 +1,5 @@
+"""Implements a config command to makedoc cli"""
 import click
-import pathlib
 
 
 @click.command("config")
@@ -12,3 +12,7 @@ import pathlib
 @click.pass_context
 def config(ctx, *args, **kwargs):
     """Gets config utilities"""
+    pass
+
+
+# TODO: Implements a cleaner for cleaning the dirdoc from all the useless paths

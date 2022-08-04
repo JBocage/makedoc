@@ -30,7 +30,7 @@ repos:
         name: interrogate
         exclude: ((dist|json|data|data_format)/|__init__.py)
         description: 'Checks code base for missing docstrings'
-        args: ["--ignore-init-module", "--ignore-init-method"]
+        args: ["--ignore-init-module", "--ignore-init-method", "-vv"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1 # Use the ref you want to point at
     hooks:

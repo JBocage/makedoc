@@ -1,23 +1,38 @@
+"""
+> author: Julien Bocage
+> author-email: julien.bocage@gmail.com
+
+Implements a parser class for the source directory of a project
+"""
+
 import json
+
 from makedoc.parsers.concept.parser_abstract import MakedocPaths
+
 from .directory_parser import DirectoryParser
 
 
 class SourceDirectoryParser(DirectoryParser):
+    """Parser class for the source directory"""
+
     def __init__(self, path):
 
         self.makedoc_paths = MakedocPaths(path)
         self._init_makedoc_file_structure()
         super(SourceDirectoryParser, self).__init__(path=path, root_path=path)
-        # self._mine_for_doc()
 
-    def get_partial_path(self):
+    def get_partial_path(self) -> str:
+        """Returns the partial path of the parser"""
         return ""
 
     def is_ignored(self) -> bool:
+        """Returns True if the directory has to be ignored.
+        Source directory cannot be ignored.
+        """
         return False
 
     def _init_makedoc_file_structure(self):
+        """Initialises the .makedoc folder"""
 
         if not self.makedoc_paths.packed_doc.exists():
             self.makedoc_paths.packed_doc.parent.mkdir(exist_ok=True, parents=True)

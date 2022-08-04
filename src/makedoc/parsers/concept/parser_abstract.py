@@ -1,12 +1,44 @@
-from abc import ABC, abstractmethod
-from distutils.command.config import config
+"""Implements a blueprint class for all parsers"""
+
 import json
-from typing import Optional, Union, List
 import pathlib
+from abc import ABC, abstractmethod
+from typing import Optional
+
 from makedoc import __VERSION__
 
 
 class MakedocPaths:
+    """Contains all the paths used by the package.
+
+    Attributes:
+        logs (pathlib.Path)
+            The path to .makedoc/logs/  # TODO: Implement logging
+        config (pathlib.Path)
+            The path to .makedoc/config/
+        packed_doc (pathlib.Path)
+            The path to the packed doc file.
+            .makedoc/packed_doc.json
+        ignored_path (pathlib.Path)
+            The path to the ignored paths file.
+            .makedoc/config/makedoc.ignored_paths
+        ignore_every (pathlib.Path)
+            The path to the ignore_every file.
+            .makedoc/config/makedoc.ignore_every
+        ignored_extensions (pathlib.Path)
+            The path to the ignored_extensions file.
+            .makedoc/config/makedoc.ignored_extensions
+        files_naming (pathlib.Path)
+            The path to the files naming file.
+            .makedoc/config/makedoc.files_naming.json
+
+    Properties:
+        unpacked_doc_file_name (str)
+            The file name of the directory unpacked doc
+        autodoc_file_name (str)
+            The file name of the doc md files (default: README.md)
+    """
+
     def __init__(self, source_path: pathlib.Path) -> None:
 
         makedoc = source_path / ".makedoc"
@@ -26,6 +58,7 @@ class MakedocPaths:
         self._autodoc_file_name: Optional[str] = None
 
     def _read_files_naming(self):
+        """Reads the files naming configuration"""
         with open(self.files_naming, "r") as f:
             files_naming = json.load(f)
             self._unpacked_doc_file_name = files_naming["unpacked_doc_file_name"]
@@ -33,18 +66,21 @@ class MakedocPaths:
 
     @property
     def unpacked_doc_file_name(self) -> str:
+        """Gets the directory unpacked doc file name"""
         if self._unpacked_doc_file_name is None:
             self._read_files_naming()
         return self._unpacked_doc_file_name
 
     @property
     def autodoc_file_name(self) -> str:
+        """Gets the auto doc file name"""
         if self._autodoc_file_name is None:
             self._read_files_naming()
         return self._autodoc_file_name
 
 
 class ParserAbstract(ABC):
+    """Abstract class for parsers to define the mandatory methods"""
 
     VERSION = __VERSION__
 
@@ -57,18 +93,27 @@ class ParserAbstract(ABC):
 
     @abstractmethod
     def get_parsed_doc(self) -> str:
+        """Should get the parsed documentation for the path"""
         if self.parsed_doc == "":
             self.parsed_doc = ""
         return self.parsed_doc
 
     @abstractmethod
     def get_hierarchy_repr(self) -> str:
+        """Should get the file arborescence representation of the path.
+
+        # TODO: Change name and implement property named 'arborescence_repr'
+        """
         return ""
 
     def is_ignored(self) -> bool:
+        """Checks if the parser should be ignored
+
+        # TODO: Make it a property
+        """
         with open(self.makedoc_paths.ignored_path, "r") as f:
             lines = f.readlines()
-        for l in lines:
+        for l in lines:  # TODO: poor naming
             if self.get_partial_path():
                 if (
                     l[0] != "#"
@@ -86,21 +131,26 @@ class ParserAbstract(ABC):
                     return True
         with open(self.makedoc_paths.ignored_every, "r") as f:
             lines = f.readlines()
-        for l in lines:
+        for l in lines:  # TODO: poor naming
             if l[0] != "#" and l.strip() == self.name:
                 return True
         if self.path.is_file():
             with open(self.makedoc_paths.ignored_extensions, "r") as f:
                 lines = f.readlines()
-            for l in lines:
+            for l in lines:  # TODO: poor naming
                 if l[0] != "#" and l.strip() == ".".join(self.name.split(".")[1:]):
                     return True
         return False
 
     def get_partial_path(self):
+        """Gets the partial path of the parser
+
+        TODO: Make it a property
+        """
         fullpath = str(self.path.absolute())
         root_path = str(self.root_path.absolute())
         return fullpath[len(root_path) + 1 :]
 
     def __repr__(self):
+        """Gets the representation of the parser"""
         return str(self.path)

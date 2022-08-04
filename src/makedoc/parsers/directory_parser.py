@@ -1,16 +1,18 @@
-import os
+"""Implements a parser class for directories"""
+
 import datetime
 import json
-from struct import pack
+import os
+from typing import Dict, List
 
-from .concept import ParserAbstract
-from .concept import FileParserAbstract
+from .concept import FileParserAbstract, ParserAbstract
 from .pyscript_parser import PyscriptParser
-from typing import List, Dict
 
 
 class DirectoryParser(ParserAbstract):
+    """Parser class for directories"""
 
+    # File extensions supported and their parsers
     EXTENSION_MATCHING = {"py": PyscriptParser}
 
     def __init__(self, **kwargs):
@@ -22,7 +24,8 @@ class DirectoryParser(ParserAbstract):
             self._init_packed_doc()
             self._mine_for_doc()
 
-    def _init_packed_doc(self):
+    def _init_packed_doc(self) -> None:
+        """Initialised packed doc entry if not registered"""
 
         with open(self.makedoc_paths.packed_doc, "r") as f:
             packed_doc: Dict[str, str] = json.load(f)
@@ -34,7 +37,13 @@ class DirectoryParser(ParserAbstract):
                     packed_doc, f, indent=4, separators=(",", ": "), sort_keys=True
                 )
 
-    def _mine_for_doc(self):
+    def _mine_for_doc(self) -> None:
+        """Digs inside the file arborescence for documenting parsers.
+
+        When a directory is found, inits a DirectoryParser
+        When a file is found, checks if its extension is supported, or initialise a
+        default FileParser
+        """
         self.dir_children: List[DirectoryParser] = []
         self.file_children: List[FileParserAbstract] = []
         for fname in os.listdir(self.path):
@@ -59,6 +68,9 @@ class DirectoryParser(ParserAbstract):
         self.file_children.sort(key=lambda x: x.name)
 
     def get_parsed_doc(self) -> str:
+        """Returns the doc for the parser.
+        Directory doc is stored in .makedoc/packed_doc.json
+        """
 
         if self.makedoc_paths.unpacked_doc_file_name in os.listdir(self.path):
             with open(self.path / self.makedoc_paths.unpacked_doc_file_name, "r") as f:
@@ -70,20 +82,21 @@ class DirectoryParser(ParserAbstract):
         return packed_doc[self.get_partial_path()]
 
     def get_doc_file_content(self) -> str:
+        """Builds the README doc file content automatically"""
         content = ""
 
         content += self.get_parsed_doc()
 
         content += (
-            f"\n"
-            f'<hr style="border:2px solid gray"> </hr>\n'
-            f"\n"
-            f"# Structure\n"
-            f"\n"
-            f"```\n"
+            "\n"
+            '<hr style="border:2px solid gray"> </hr>\n'
+            "\n"
+            "# Structure\n"
+            "\n"
+            "```\n"
         )
         content += self.get_hierarchy_repr()
-        content += f"\n```\n" f'<hr style="border:2px solid gray"> </hr>\n' f"\n"
+        content += "\n```\n" '<hr style="border:2px solid gray"> </hr>\n' "\n"
 
         for subdir in self.dir_children:
             subdirdoc = subdir.get_parsed_doc()
@@ -98,6 +111,29 @@ class DirectoryParser(ParserAbstract):
         return content
 
     def get_hierarchy_repr(self) -> str:
+        """Builds the internal hierarchy of the directory.
+
+        The return string looks like the following
+        makedoc/
+            ├── cli/
+            │   ├── commands/
+            │   │   ├── bash_scripts/
+            │   │   ├── __init__.py
+            │   │   ├── config.py
+            │   │   ├── generate.py
+            │   ├── __init__.py
+            │   └── main.py
+            ├── parsers/
+            │   ├── concept/
+            │   │   ├── __init__.py
+            │   │   ├── file_parser_abstract.py
+            │   │   └── parser_abstract.py
+            │   ├── __init__.py
+            │   ├── directory_parser.py
+            │   ├── pyscript_parser.py
+            │   └── source_directory_parser.py
+            └── __init__.py
+        """
         FCROSS = "└── "
         CROSSDIR = "├── "
         VERTLINE = "│   "
@@ -118,7 +154,11 @@ class DirectoryParser(ParserAbstract):
             output += marker + subfile.get_hierarchy_repr() + "\n"
         return output[:-1]
 
-    def save_readme(self, recurse=False):
+    def save_readme(self, recurse=False) -> None:
+        """Saves the doc content into a readme file.
+
+        The name of the file is defined in .makedoc/makedoc.files_nameing.json
+        """
         with open(self.path / self.makedoc_paths.autodoc_file_name, "w+") as f:
             f.write(self.get_doc_file_content())
         if recurse:
@@ -126,7 +166,13 @@ class DirectoryParser(ParserAbstract):
                 child_dir.save_readme(recurse=True)
         return
 
-    def update_readme(self, recurse=False):
+    def update_readme(self, recurse=False) -> None:
+        """Updates the readme file of the directory if it exists.
+
+        Passes otherwise
+
+        # TODO: rename into update_doc
+        """
         if self.makedoc_paths.autodoc_file_name in os.listdir(self.path):
             with open(self.path / self.makedoc_paths.autodoc_file_name, "w") as f:
                 f.write(self.get_doc_file_content())
@@ -135,7 +181,13 @@ class DirectoryParser(ParserAbstract):
                 child_dir.update_readme(recurse=True)
         return
 
-    def unpack_doc(self, recurse=False):
+    def unpack_doc(self, recurse=False) -> None:
+        """Creates a file inside the directory that contains the directory doc
+
+        The user can then update the directory doc by updating the file.
+        The content of this file is synced with the content of .makedoc/packed_doc.json
+        """
+
         with open(self.makedoc_paths.packed_doc, "r") as f:
             packed_doc: Dict[str, str] = json.load(f)
 
@@ -150,7 +202,11 @@ class DirectoryParser(ParserAbstract):
             for child in self.dir_children:
                 child.unpack_doc(recurse=True)
 
-    def pack_doc(self, recurse=False):
+    def pack_doc(self, recurse=False) -> None:
+        """Updates .makedoc/packed_doc.json according to what is contained
+
+        In the file created by the unpack_doc method.
+        """
 
         if self.makedoc_paths.unpacked_doc_file_name not in os.listdir(self.path):
             if not recurse:
@@ -175,4 +231,5 @@ class DirectoryParser(ParserAbstract):
                 child.pack_doc(recurse=True)
 
     def parse_doc(self) -> str:
+        # TODO: Check if used
         pass
