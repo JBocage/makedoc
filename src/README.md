@@ -10,7 +10,6 @@ src/
     ├── cli/
     │   ├── commands/
     │   │   ├── bash_scripts/
-    │   │   │   └── source_for_bash_completion.sh
     │   │   ├── __init__.py
     │   │   ├── config.py
     │   │   ├── generate.py
@@ -42,4 +41,4 @@ src/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/03/22 20:51:03 
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/04/22 19:47:54 
