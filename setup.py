@@ -29,13 +29,14 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     python_requires=">=3.7, <4",
+    scripts=["src/makedoc/cli/commands/bash_scripts/autocomplete-makedoc"],
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
     # installed, so they must be valid existing projects.
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/discussions/install-requires-vs-requirements/
-    install_requires=[],  # Optional
+    install_requires=["click", "wheel"],  # Optional
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
     # syntax, for example:
@@ -50,12 +51,11 @@ setup(
     },
     # If there are data files included in your packages that need to be
     # installed, specify them here.
-    package_data={"": ["./src/makedoc/cli/commands/bash_scripts/*"]},  # Optional
+    package_data={},  # Optional
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
     # http://docs.python.org/distutils/setupscript.html#installing-additional-files
     #
     # In this case, 'data_file' will be installed into '<sys.prefix>/data'
     entry_points={"console_scripts": ["makedoc = makedoc.cli.main:cli"]},
-    include_package_data=True,
 )

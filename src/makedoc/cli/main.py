@@ -29,7 +29,7 @@ def cli(ctx, *args, **kwargs):
     Loads all high level kwargs into the config.
     For supporting autocompletion, please run:
 
-    source `makedoc config`
+    source autocomplete-makedoc
     """
     ctx.obj = Config()
     for key, value in kwargs.items():

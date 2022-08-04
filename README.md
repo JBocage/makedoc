@@ -14,7 +14,6 @@ makedoc/
 │       ├── cli/
 │       │   ├── commands/
 │       │   │   ├── bash_scripts/
-│       │   │   │   └── source_for_bash_completion.sh
 │       │   │   ├── __init__.py
 │       │   │   ├── config.py
 │       │   │   ├── generate.py
@@ -49,4 +48,4 @@ makedoc/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/03/22 20:56:55 
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/04/22 09:31:21 
