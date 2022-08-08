@@ -21,14 +21,13 @@ class FileParserAbstract(ParserAbstract):
         """The default doc for a file is empty. The file is ignored"""
         return ""
 
-    def readlines_as_txt(self) -> List[str]:
+    @property
+    def content_txt_lines(self) -> List[str]:
         """Implements a method to read the content of the file as text
 
         Returns:
             lines: List[str]
                 The list of all lines strings
-
-        # TODO: Make it a property
         """
         with open(self.path, "r") as f:
             lines = f.readlines()
