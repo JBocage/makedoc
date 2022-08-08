@@ -1,11 +1,11 @@
 {
-    "": "# makedoc\n\nThis is some doc !!\n\nUpdateed !",
+    "": "# makedoc\n\nThis is the makedoc project.\n\nThis repo aims to implement a command line tool to enable auto documentation file\ngeneration. This would be used for generating beautiful `README.md` files !\n\nFor example, this README file and all the READMEs of this repo have been generated\nthis way !\n\n## Installation\n\nJust run the following command in your python virtual environment \n\n```\npip install git+https://github.com/JBocage/makedoc@dev\n```\n\n## Get started\n\nTo get an insight on all the possibilities this command line tool offers, you can run\n\n```\nmakedoc\n```\n\n## Contribute\n\nYou please feel free to fork this repo.\n\nIf you wish to contribute, you can also email me at julien.bocage@gmail.com\n",
     ".vscode": "# .vscode\n",
-    "src": "# src\n",
+    "src": "# src\n\nThis is the source directory. All the useful code should be contained there !",
     "src/makedoc": "# makedoc\n",
-    "src/makedoc/cli": "# cli\n",
-    "src/makedoc/cli/commands": "# commands\n",
-    "src/makedoc/cli/commands/bash_scripts": "# bash_scripts\n",
-    "src/makedoc/parsers": "# parsers\n",
-    "src/makedoc/parsers/concept": "# concept\n"
+    "src/makedoc/cli": "# cli\n\nThis is the `cli` directory. It contains all the command line related code.",
+    "src/makedoc/cli/commands": "# commands\n\nThis is the `commands` directory. Here, one script should correspond to\none command line command.",
+    "src/makedoc/cli/commands/bash_scripts": "# bash_scripts\n\nThis directory contains the bash scripts that are included in the package.\n\n### How to integrate a bash script\n\nIf you wish to add a script here, add the file, and register it in the `setup.py`\nfile.",
+    "src/makedoc/parsers": "# parsers\n\nThis is the `parsers` directory. It contains the code that implements various parser\nclasses for walking through the directory files and parsing docs.",
+    "src/makedoc/parsers/concept": "# concept\n\nThe `concept` directory should contain all abstract and base classes for the parsers\nimplemented outside."
 }

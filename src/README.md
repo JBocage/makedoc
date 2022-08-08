@@ -1,5 +1,6 @@
 # src
 
+This is the source directory. All the useful code should be contained there !
 <hr style="border:2px solid gray"> </hr>
 
 # Structure
@@ -41,4 +42,4 @@ src/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/04/22 19:47:54 
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/08/22 20:29:12 
