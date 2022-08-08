@@ -171,19 +171,17 @@ class DirectoryParser(ParserAbstract):
                 child_dir.save_readme(recurse=True, save_path=save_path)
         return
 
-    def update_readme(self, recurse=False) -> None:
+    def update_doc(self, recurse=False) -> None:
         """Updates the readme file of the directory if it exists.
 
         Passes otherwise
-
-        # TODO: rename into update_doc
         """
         if self.makedoc_paths.autodoc_file_name in os.listdir(self.path):
             with open(self.path / self.makedoc_paths.autodoc_file_name, "w") as f:
                 f.write(self.get_doc_file_content())
         if recurse:
             for child_dir in self.dir_children:
-                child_dir.update_readme(recurse=True)
+                child_dir.update_doc(recurse=True)
         return
 
     def unpack_doc(self, recurse=False) -> None:
@@ -234,7 +232,3 @@ class DirectoryParser(ParserAbstract):
         if recurse:
             for child in self.dir_children:
                 child.pack_doc(recurse=True)
-
-    def parse_doc(self) -> str:
-        # TODO: Check if used
-        pass

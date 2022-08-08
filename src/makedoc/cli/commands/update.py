@@ -1,8 +1,7 @@
-from reprlib import recursive_repr
-import click
+import os
 import pathlib
 
-import os
+import click
 
 from makedoc.parsers.directory_parser import DirectoryParser
 
@@ -75,6 +74,6 @@ def update(ctx, *args, **kwargs):
         recurse = recurse or recurse_pack
         pack = pack or recurse_pack
 
-        parser.update_readme(recurse=recurse)
+        parser.update_doc(recurse=recurse)
         if pack:
             parser.pack_doc(recurse=recurse)

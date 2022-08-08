@@ -1,7 +1,7 @@
-import click
+import os
 import pathlib
 
-import os
+import click
 
 from makedoc.parsers.directory_parser import DirectoryParser
 
@@ -69,4 +69,4 @@ def pack(ctx, *args, **kwargs):
 
         parser.pack_doc(recurse=recurse)
         if update:
-            parser.update_readme(recurse=recurse)
+            parser.update_doc(recurse=recurse)
