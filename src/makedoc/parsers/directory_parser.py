@@ -31,8 +31,8 @@ class DirectoryParser(ParserAbstract):
         with open(self.makedoc_paths.packed_doc, "r") as f:
             packed_doc: Dict[str, str] = json.load(f)
 
-        if not self.get_partial_path() in packed_doc.keys():
-            packed_doc[self.get_partial_path()] = f"# {self.name}\n"
+        if self.partial_path not in packed_doc.keys():
+            packed_doc[self.partial_path] = f"# {self.name}\n"
             with open(self.makedoc_paths.packed_doc, "w+") as f:
                 json.dump(
                     packed_doc, f, indent=4, separators=(",", ": "), sort_keys=True
@@ -80,7 +80,7 @@ class DirectoryParser(ParserAbstract):
 
         with open(self.makedoc_paths.packed_doc, "r") as f:
             packed_doc: Dict[str, str] = json.load(f)
-        return packed_doc[self.get_partial_path()]
+        return packed_doc[self.partial_path]
 
     def get_doc_file_content(self) -> str:
         """Builds the README doc file content automatically"""
@@ -200,7 +200,7 @@ class DirectoryParser(ParserAbstract):
                 raise RuntimeError("The directory doc is already unpacked")
         else:
             with open(self.path / self.makedoc_paths.unpacked_doc_file_name, "w+") as f:
-                f.write(packed_doc[self.get_partial_path()])
+                f.write(packed_doc[self.partial_path])
 
         if recurse:
             for child in self.dir_children:
@@ -221,7 +221,7 @@ class DirectoryParser(ParserAbstract):
 
             with open(self.makedoc_paths.packed_doc, "r") as f:
                 packed_doc: Dict[str, str] = json.load(f)
-                packed_doc[self.get_partial_path()] = doc
+                packed_doc[self.partial_path] = doc
 
             with open(self.makedoc_paths.packed_doc, "w") as f:
                 json.dump(

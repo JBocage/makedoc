@@ -109,14 +109,14 @@ class ParserAbstract(ABC):
         with open(self.makedoc_paths.ignored_path, "r") as f:
             lines = f.readlines()
         for line in lines:
-            if self.get_partial_path():
+            if self.partial_path:
                 if (
                     line[0] != "#"
                     and line.strip() == str(self.path)
-                    or line.strip() == self.get_partial_path()
+                    or line.strip() == self.partial_path
                     or (
                         line.strip()
-                        == "/".join(self.get_partial_path().split("/")[:-1]) + "/"
+                        == "/".join(self.partial_path.split("/")[:-1]) + "/"
                         and line.strip() != ""
                     )
                 ):
@@ -139,11 +139,9 @@ class ParserAbstract(ABC):
                     return True
         return False
 
-    def get_partial_path(self):
-        """Gets the partial path of the parser
-
-        TODO: Make it a property
-        """
+    @property
+    def partial_path(self) -> str:
+        """Gets the partial path of the parser"""
         fullpath = str(self.path.absolute())
         root_path = str(self.root_path.absolute())
         return fullpath[len(root_path) + 1 :]
