@@ -2,7 +2,7 @@
 
 import json
 import pathlib
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 from typing import Optional
 
 from makedoc import __VERSION__
@@ -98,8 +98,8 @@ class ParserAbstract(ABC):
             self.parsed_doc = ""
         return self.parsed_doc
 
-    @abstractmethod
-    def get_hierarchy_repr(self) -> str:
+    @abstractproperty
+    def file_arborescence_repr(self) -> str:
         """Should get the file arborescence representation of the path.
 
         # TODO: Change name and implement property named 'arborescence_repr'
@@ -113,32 +113,34 @@ class ParserAbstract(ABC):
         """
         with open(self.makedoc_paths.ignored_path, "r") as f:
             lines = f.readlines()
-        for l in lines:  # TODO: poor naming
+        for line in lines:
             if self.get_partial_path():
                 if (
-                    l[0] != "#"
-                    and l.strip() == str(self.path)
-                    or l.strip() == self.get_partial_path()
+                    line[0] != "#"
+                    and line.strip() == str(self.path)
+                    or line.strip() == self.get_partial_path()
                     or (
-                        l.strip()
+                        line.strip()
                         == "/".join(self.get_partial_path().split("/")[:-1]) + "/"
-                        and l.strip() != ""
+                        and line.strip() != ""
                     )
                 ):
                     return True
             else:
-                if l[0] != "#" and l.strip() == str(self.path):
+                if line[0] != "#" and line.strip() == str(self.path):
                     return True
         with open(self.makedoc_paths.ignored_every, "r") as f:
             lines = f.readlines()
-        for l in lines:  # TODO: poor naming
-            if l[0] != "#" and l.strip() == self.name:
+        for line in lines:
+            if line[0] != "#" and line.strip() == self.name:
                 return True
         if self.path.is_file():
             with open(self.makedoc_paths.ignored_extensions, "r") as f:
                 lines = f.readlines()
-            for l in lines:  # TODO: poor naming
-                if l[0] != "#" and l.strip() == ".".join(self.name.split(".")[1:]):
+            for line in lines:
+                if line[0] != "#" and line.strip() == ".".join(
+                    self.name.split(".")[1:]
+                ):
                     return True
         return False
 

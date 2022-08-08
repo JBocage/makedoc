@@ -96,7 +96,7 @@ class DirectoryParser(ParserAbstract):
             "\n"
             "```\n"
         )
-        content += self.get_hierarchy_repr()
+        content += self.file_arborescence_repr
         content += "\n```\n" '<hr style="border:2px solid gray"> </hr>\n' "\n"
 
         for subdir in self.dir_children:
@@ -111,7 +111,8 @@ class DirectoryParser(ParserAbstract):
         content += f'\n\n\n\n<sub>This doc was automatically generated with makedoc v{self.VERSION} on {datetime.datetime.now().strftime(" %D %H:%M:%S ")}'
         return content
 
-    def get_hierarchy_repr(self) -> str:
+    @property
+    def file_arborescence_repr(self) -> str:
         """Builds the internal hierarchy of the directory.
 
         The return string looks like the following
@@ -144,7 +145,7 @@ class DirectoryParser(ParserAbstract):
         i = 0
         for subdir in self.dir_children:
             i += 1
-            subdir_hierarchy = subdir.get_hierarchy_repr()
+            subdir_hierarchy = subdir.file_arborescence_repr
             marker = CROSSDIR if i != n_childs else FCROSS
             for line in subdir_hierarchy.split("\n"):
                 output += marker + line + "\n"
@@ -152,7 +153,7 @@ class DirectoryParser(ParserAbstract):
         for subfile in self.file_children:
             i += 1
             marker = CROSSDIR if i != n_childs else FCROSS
-            output += marker + subfile.get_hierarchy_repr() + "\n"
+            output += marker + subfile.file_arborescence_repr + "\n"
         return output[:-1]
 
     def save_readme(

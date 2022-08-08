@@ -13,7 +13,8 @@ class FileParserAbstract(ParserAbstract):
     def __init__(self, **kwargs):
         super(FileParserAbstract, self).__init__(**kwargs)
 
-    def get_hierarchy_repr(self) -> str:
+    @property
+    def file_arborescence_repr(self) -> str:
         """The hierarchy of a single file is itself."""
         return self.name
 
