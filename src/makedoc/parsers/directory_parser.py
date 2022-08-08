@@ -21,7 +21,7 @@ class DirectoryParser(ParserAbstract):
 
         self.dir_children: List[DirectoryParser] = []
         self.file_children: List[FileParserAbstract] = []
-        if not self.is_ignored():
+        if not self.is_ignored:
             self._init_packed_doc()
             self._mine_for_doc()
 
@@ -52,7 +52,7 @@ class DirectoryParser(ParserAbstract):
                 child = DirectoryParser(
                     path=self.path / fname, root_path=self.root_path
                 )
-                if not child.is_ignored():
+                if not child.is_ignored:
                     self.dir_children.append(child)
             else:
                 if fname.split(".")[-1] in self.EXTENSION_MATCHING.keys():
@@ -63,7 +63,7 @@ class DirectoryParser(ParserAbstract):
                     child = FileParserAbstract(
                         path=self.path / fname, root_path=self.root_path
                     )
-                if not child.is_ignored():
+                if not child.is_ignored:
                     self.file_children.append(child)
         self.dir_children.sort(key=lambda x: x.name)
         self.file_children.sort(key=lambda x: x.name)

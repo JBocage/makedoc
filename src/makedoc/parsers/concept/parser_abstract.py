@@ -100,17 +100,12 @@ class ParserAbstract(ABC):
 
     @abstractproperty
     def file_arborescence_repr(self) -> str:
-        """Should get the file arborescence representation of the path.
-
-        # TODO: Change name and implement property named 'arborescence_repr'
-        """
+        """Should get the file arborescence representation of the path."""
         return ""
 
+    @property
     def is_ignored(self) -> bool:
-        """Checks if the parser should be ignored
-
-        # TODO: Make it a property
-        """
+        """Checks if the parser should be ignored"""
         with open(self.makedoc_paths.ignored_path, "r") as f:
             lines = f.readlines()
         for line in lines:

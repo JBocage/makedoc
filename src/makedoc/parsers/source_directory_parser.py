@@ -25,6 +25,7 @@ class SourceDirectoryParser(DirectoryParser):
         """Returns the partial path of the parser"""
         return ""
 
+    @property
     def is_ignored(self) -> bool:
         """Returns True if the directory has to be ignored.
         Source directory cannot be ignored.
