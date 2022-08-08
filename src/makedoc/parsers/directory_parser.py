@@ -3,7 +3,8 @@
 import datetime
 import json
 import os
-from typing import Dict, List
+import pathlib
+from typing import Dict, List, Optional
 
 from .concept import FileParserAbstract, ParserAbstract
 from .pyscript_parser import PyscriptParser
@@ -154,16 +155,20 @@ class DirectoryParser(ParserAbstract):
             output += marker + subfile.get_hierarchy_repr() + "\n"
         return output[:-1]
 
-    def save_readme(self, recurse=False) -> None:
+    def save_readme(
+        self, recurse=False, save_path: Optional[pathlib.Path] = None
+    ) -> None:
         """Saves the doc content into a readme file.
 
         The name of the file is defined in .makedoc/makedoc.files_nameing.json
         """
-        with open(self.path / self.makedoc_paths.autodoc_file_name, "w+") as f:
+        if save_path is None:
+            save_path = self.path / self.makedoc_paths.autodoc_file_name
+        with open(save_path, "w+") as f:
             f.write(self.get_doc_file_content())
         if recurse:
             for child_dir in self.dir_children:
-                child_dir.save_readme(recurse=True)
+                child_dir.save_readme(recurse=True, save_path=save_path)
         return
 
     def update_readme(self, recurse=False) -> None:

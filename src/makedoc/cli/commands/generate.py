@@ -1,10 +1,9 @@
-import click
-from makedoc.parsers.source_directory_parser import (
-    DirectoryParser,
-)
+import os
 import pathlib
 
-import os
+import click
+
+from makedoc.parsers.source_directory_parser import DirectoryParser
 
 
 @click.command("generate")
@@ -13,6 +12,14 @@ import os
     "verbose",
     is_flag=True,
     help="Sets verbosity",
+)
+@click.option(
+    "-o",
+    "--output-path",
+    "output_path",
+    type=click.Path(),
+    help="The output file path for the doc. If not provided, the default file name is "
+    "chosen.",
 )
 @click.argument("root_dir", type=click.Path(), required=False)
 @click.pass_context
@@ -46,4 +53,8 @@ def generate(ctx, *args, **kwargs):
         parser = DirectoryParser(
             path=pathlib.Path(root_dir_str).resolve().absolute(), root_path=root
         )
-        parser.save_readme()
+        output_path = args.pop("output_path")
+        if output_path is None:
+            parser.save_readme()
+        else:
+            parser.save_readme(save_path=pathlib.Path(output_path).resolve().absolute())
