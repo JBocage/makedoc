@@ -106,6 +106,8 @@ class ParserAbstract(ABC):
     @property
     def is_ignored(self) -> bool:
         """Checks if the parser should be ignored"""
+        if self.name == self.makedoc_paths.unpacked_doc_file_name:
+            return True
         with open(self.makedoc_paths.ignored_path, "r") as f:
             lines = f.readlines()
         for line in lines:
