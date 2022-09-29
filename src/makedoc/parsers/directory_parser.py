@@ -4,7 +4,7 @@ import datetime
 import json
 import os
 import pathlib
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Type
 
 from .concept import FileParserAbstract, ParserAbstract
 from .pyscript_parser import PyscriptParser
@@ -14,7 +14,7 @@ class DirectoryParser(ParserAbstract):
     """Parser class for directories"""
 
     # File extensions supported and their parsers
-    EXTENSION_MATCHING = {"py": PyscriptParser}
+    EXTENSION_MATCHING: Dict[str, Type[FileParserAbstract]] = {"py": PyscriptParser}
 
     def __init__(self, **kwargs):
         super(DirectoryParser, self).__init__(**kwargs)
@@ -107,6 +107,16 @@ class DirectoryParser(ParserAbstract):
                 else:
                     content += f">{line}\n"
             content += "\n" "---\n" "\n"
+
+        for file in self.file_children:
+            filedoc = file.get_parsed_doc()
+            if filedoc:
+                for line in filedoc.split("\n"):
+                    if line[:1] == "#":
+                        content += f"#{line}\n"
+                    else:
+                        content += f">{line}\n"
+                content += "\n" "---\n" "\n"
 
         content += f'\n\n\n\n<sub>This doc was automatically generated with makedoc v{self.VERSION} on {datetime.datetime.now().strftime(" %D %H:%M:%S ")}'
         return content
