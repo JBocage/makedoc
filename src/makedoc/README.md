@@ -1,5 +1,6 @@
 # makedoc
 
+Contains the code of the makedoc package.
 <hr style="border:2px solid gray"> </hr>
 
 # Structure
@@ -44,8 +45,13 @@ makedoc/
 
 ---
 
+## __init__.py
+>
+
+---
 
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/08/22 20:29:12 
+
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/29/22 16:00:29 

@@ -7,12 +7,15 @@
 # and README documentation.
 ###################################################
 
-venv
-.idea
 .git
+.idea
 .makedoc
+.venv
 .vscode
 doc/imgs/
+sandbox
+tmp
+venv
 
 ###################################################
 # AUTO ADDED:

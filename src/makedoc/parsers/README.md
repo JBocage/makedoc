@@ -26,8 +26,34 @@ parsers/
 
 ---
 
+## __init__.py
+>
+
+---
+
+## directory_parser.py
+>Implements a parser class for directories
+
+---
+
+## pyscript_parser.py
+>Implements a parser class for python scripts
+
+---
+
+## source_directory_parser.py
+>> author: Julien Bocage
+>
+>> author-email: julien.bocage@gmail.com
+>
+>
+>
+>Implements a parser class for the source directory of a project
+
+---
 
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  08/08/22 20:29:12 
+
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/29/22 16:00:29 
