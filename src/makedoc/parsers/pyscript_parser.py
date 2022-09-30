@@ -59,9 +59,15 @@ class PyscriptParser(FileParserAbstract):
                 else:
                     file_beginning_comment_lines.append(line.rstrip())
 
-        self.logger.add_log(
-            EmptyPyFileDocstringWarning(
-                file_path_str=self.partial_path, makedoc_paths=self.makedoc_paths
+        if not (
+            self.name == "__init__.py"
+            and self.makedoc_paths.config_dict["parsing"]["python"][
+                "ignore-init-file-level-docstrings"
+            ]
+        ):
+            self.logger.add_log(
+                EmptyPyFileDocstringWarning(
+                    file_path_str=self.partial_path, makedoc_paths=self.makedoc_paths
+                )
             )
-        )
         return []

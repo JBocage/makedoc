@@ -14,4 +14,12 @@ CfgVerbosityDict = TypedDict(
     },
 )
 
-CfgDict = TypedDict("ConfigDict", {"verbosity": CfgVerbosityDict})
+CfgParsingPythonDict = TypedDict(
+    "CfgParsingPythonDict", {"ignore-init-file-level-docstrings": bool}
+)
+
+CfgParsingDict = TypedDict("CfgParsingDict", {"python": CfgParsingPythonDict})
+
+CfgDict = TypedDict(
+    "ConfigDict", {"verbosity": CfgVerbosityDict, "parsing": CfgParsingDict}
+)
