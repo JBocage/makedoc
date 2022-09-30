@@ -1,82 +1,12 @@
 """Implements a blueprint class for all parsers"""
 
-import json
 import pathlib
 from abc import ABC, abstractmethod, abstractproperty
-from typing import Optional
+from typing import Optional, Tuple
 
 from makedoc import __VERSION__
-
-
-class MakedocPaths:
-    """Contains all the paths used by the package.
-
-    Attributes:
-        logs (pathlib.Path)
-            The path to .makedoc/logs/  # TODO: Implement logging
-        config (pathlib.Path)
-            The path to .makedoc/config/
-        packed_doc (pathlib.Path)
-            The path to the packed doc file.
-            .makedoc/packed_doc.json
-        ignored_path (pathlib.Path)
-            The path to the ignored paths file.
-            .makedoc/config/makedoc.ignored_paths
-        ignore_every (pathlib.Path)
-            The path to the ignore_every file.
-            .makedoc/config/makedoc.ignore_every
-        ignored_extensions (pathlib.Path)
-            The path to the ignored_extensions file.
-            .makedoc/config/makedoc.ignored_extensions
-        files_naming (pathlib.Path)
-            The path to the files naming file.
-            .makedoc/config/makedoc.files_naming.json
-
-    Properties:
-        unpacked_doc_file_name (str)
-            The file name of the directory unpacked doc
-        autodoc_file_name (str)
-            The file name of the doc md files (default: README.md)
-    """
-
-    def __init__(self, source_path: pathlib.Path) -> None:
-
-        makedoc = source_path / ".makedoc"
-        config = makedoc / "config"
-
-        self.logs = makedoc / "logs"
-        self.config = makedoc / "config"
-
-        self.packed_doc = makedoc / "packed_doc.json"
-
-        self.ignored_path = config / "makedoc.ignored_paths"
-        self.ignored_every = config / "makedoc.ignore_every"
-        self.ignored_extensions = config / "makedoc.ignored_extensions"
-        self.files_naming = config / "makedoc.files_naming.json"
-
-        self._unpacked_doc_file_name: Optional[str] = None
-        self._autodoc_file_name: Optional[str] = None
-
-    def _read_files_naming(self):
-        """Reads the files naming configuration"""
-        with open(self.files_naming, "r") as f:
-            files_naming = json.load(f)
-            self._unpacked_doc_file_name = files_naming["unpacked_doc_file_name"]
-            self._autodoc_file_name = files_naming["autodoc_file_name"]
-
-    @property
-    def unpacked_doc_file_name(self) -> str:
-        """Gets the directory unpacked doc file name"""
-        if self._unpacked_doc_file_name is None:
-            self._read_files_naming()
-        return self._unpacked_doc_file_name
-
-    @property
-    def autodoc_file_name(self) -> str:
-        """Gets the auto doc file name"""
-        if self._autodoc_file_name is None:
-            self._read_files_naming()
-        return self._autodoc_file_name
+from makedoc.logging.logger import Logger
+from makedoc.makedoc_paths import MakedocPaths
 
 
 class ParserAbstract(ABC):
@@ -84,12 +14,27 @@ class ParserAbstract(ABC):
 
     VERSION = __VERSION__
 
-    def __init__(self, path: pathlib.Path, root_path: pathlib.Path):
+    def __init__(
+        self,
+        path: pathlib.Path,
+        root_path: pathlib.Path,
+        logger: Optional[Logger] = None,
+        makedoc_path: Optional[MakedocPaths] = None,
+    ):
         self.path = path
         self.root_path = root_path
         self.name = str(self.path).split("/")[-1]
+
         self.parsed_doc: str = ""
-        self.makedoc_paths = MakedocPaths(root_path)
+        if makedoc_path is None:
+            self.makedoc_paths = MakedocPaths(root_path)
+        else:
+            self.makedoc_paths = makedoc_path
+        self.source_parser: bool = False
+        if logger is None:
+            logger = Logger(self.makedoc_paths)
+            self.source_parser = True
+        self.logger = logger
 
     @abstractmethod
     def get_parsed_doc(self) -> str:
@@ -151,3 +96,8 @@ class ParserAbstract(ABC):
     def __repr__(self):
         """Gets the representation of the parser"""
         return str(self.path)
+
+    @property
+    def _message_args(self) -> Tuple[str, MakedocPaths]:
+        """Builds the arguments to provide to the messages upon creation"""
+        return (self.partial_path, self.makedoc_paths)

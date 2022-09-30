@@ -19,6 +19,14 @@ makedoc/
 │   │   └── update.py
 │   ├── __init__.py
 │   └── main.py
+├── logging/
+│   ├── messages/
+│   │   ├── concept/
+│   │   │   └── message_abstract.py
+│   │   ├── info.py
+│   │   ├── success.py
+│   │   └── warnings.py
+│   └── logger.py
 ├── parsers/
 │   ├── concept/
 │   │   ├── __init__.py
@@ -28,13 +36,21 @@ makedoc/
 │   ├── directory_parser.py
 │   ├── pyscript_parser.py
 │   └── source_directory_parser.py
-└── __init__.py
+├── utils/
+│   └── config_dict_struc.py
+├── __init__.py
+└── makedoc_paths.py
 ```
 <hr style="border:2px solid gray"> </hr>
 
 ## cli
 >
 >This is the `cli` directory. It contains all the command line related code.
+
+---
+
+## logging
+>
 
 ---
 
@@ -45,8 +61,72 @@ makedoc/
 
 ---
 
+## utils
+>
+
+---
+
 ## __init__.py
 >
+
+---
+
+## makedoc_paths.py
+>Contains all the paths used by the package.
+>
+>
+>
+>    Attributes:
+>
+>        logs (pathlib.Path)
+>
+>            The path to .makedoc/logs/  # TODO: Implement logging
+>
+>        config (pathlib.Path)
+>
+>            The path to .makedoc/config/
+>
+>        packed_doc (pathlib.Path)
+>
+>            The path to the packed doc file.
+>
+>            .makedoc/packed_doc.json
+>
+>        ignored_path (pathlib.Path)
+>
+>            The path to the ignored paths file.
+>
+>            .makedoc/config/makedoc.ignored_paths
+>
+>        ignore_every (pathlib.Path)
+>
+>            The path to the ignore_every file.
+>
+>            .makedoc/config/makedoc.ignore_every
+>
+>        ignored_extensions (pathlib.Path)
+>
+>            The path to the ignored_extensions file.
+>
+>            .makedoc/config/makedoc.ignored_extensions
+>
+>        files_naming (pathlib.Path)
+>
+>            The path to the files naming file.
+>
+>            .makedoc/config/makedoc.files_naming.json
+>
+>
+>
+>    Properties:
+>
+>        unpacked_doc_file_name (str)
+>
+>            The file name of the directory unpacked doc
+>
+>        autodoc_file_name (str)
+>
+>            The file name of the doc md files (default: README.md)
 
 ---
 
@@ -54,4 +134,4 @@ makedoc/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/29/22 16:00:29 
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/30/22 17:31:58 

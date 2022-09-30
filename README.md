@@ -50,6 +50,14 @@ makedoc/
 │   │   │   │   └── update.py
 │   │   │   ├── __init__.py
 │   │   │   └── main.py
+│   │   ├── logging/
+│   │   │   ├── messages/
+│   │   │   │   ├── concept/
+│   │   │   │   │   └── message_abstract.py
+│   │   │   │   ├── info.py
+│   │   │   │   ├── success.py
+│   │   │   │   └── warnings.py
+│   │   │   └── logger.py
 │   │   ├── parsers/
 │   │   │   ├── concept/
 │   │   │   │   ├── __init__.py
@@ -59,7 +67,10 @@ makedoc/
 │   │   │   ├── directory_parser.py
 │   │   │   ├── pyscript_parser.py
 │   │   │   └── source_directory_parser.py
-│   │   └── __init__.py
+│   │   ├── utils/
+│   │   │   └── config_dict_struc.py
+│   │   ├── __init__.py
+│   │   └── makedoc_paths.py
 │   └── makedoc.egg-info/
 ├── .flake8
 ├── .gitignore
@@ -83,4 +94,4 @@ makedoc/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/29/22 16:00:29 
+<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/30/22 17:31:58 

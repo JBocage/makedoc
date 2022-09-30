@@ -6,6 +6,10 @@ import os
 import pathlib
 from typing import Dict, List, Optional, Type
 
+from makedoc.logging.messages.info import ParsingStartsInfo
+from makedoc.logging.messages.success import ParsingFinishedSuccess
+from makedoc.logging.messages.warnings import EmptyDirdocWarning
+
 from .concept import FileParserAbstract, ParserAbstract
 from .pyscript_parser import PyscriptParser
 
@@ -50,18 +54,27 @@ class DirectoryParser(ParserAbstract):
         for fname in os.listdir(self.path):
             if (self.path / fname).is_dir():
                 child = DirectoryParser(
-                    path=self.path / fname, root_path=self.root_path
+                    path=self.path / fname,
+                    root_path=self.root_path,
+                    logger=self.logger,
+                    makedoc_path=self.makedoc_paths,
                 )
                 if not child.is_ignored:
                     self.dir_children.append(child)
             else:
                 if fname.split(".")[-1] in self.EXTENSION_MATCHING.keys():
                     child = self.EXTENSION_MATCHING[fname.split(".")[-1]](
-                        path=self.path / fname, root_path=self.root_path
+                        path=self.path / fname,
+                        root_path=self.root_path,
+                        logger=self.logger,
+                        makedoc_path=self.makedoc_paths,
                     )
                 else:
                     child = FileParserAbstract(
-                        path=self.path / fname, root_path=self.root_path
+                        path=self.path / fname,
+                        root_path=self.root_path,
+                        logger=self.logger,
+                        makedoc_path=self.makedoc_paths,
                     )
                 if not child.is_ignored:
                     self.file_children.append(child)
@@ -76,14 +89,19 @@ class DirectoryParser(ParserAbstract):
         if self.makedoc_paths.unpacked_doc_file_name in os.listdir(self.path):
             with open(self.path / self.makedoc_paths.unpacked_doc_file_name, "r") as f:
                 doc = "".join(f.readlines())
-            return doc
 
-        with open(self.makedoc_paths.packed_doc, "r") as f:
-            packed_doc: Dict[str, str] = json.load(f)
-        return packed_doc[self.partial_path]
+        else:
+            with open(self.makedoc_paths.packed_doc, "r") as f:
+                packed_doc: Dict[str, str] = json.load(f)
+            doc = packed_doc[self.partial_path]
+
+        if doc == "# " + self.name + "\n":
+            self.logger.add_log(EmptyDirdocWarning(*self._message_args))
+        return doc
 
     def get_doc_file_content(self) -> str:
         """Builds the README doc file content automatically"""
+
         content = ""
 
         content += self.get_parsed_doc()
@@ -119,6 +137,7 @@ class DirectoryParser(ParserAbstract):
                 content += "\n" "---\n" "\n"
 
         content += f'\n\n\n\n<sub>This doc was automatically generated with makedoc v{self.VERSION} on {datetime.datetime.now().strftime(" %D %H:%M:%S ")}'
+
         return content
 
     @property
@@ -173,6 +192,9 @@ class DirectoryParser(ParserAbstract):
 
         The name of the file is defined in .makedoc/makedoc.files_nameing.json
         """
+
+        if self.source_parser:
+            self.logger.add_log(ParsingStartsInfo(*self._message_args))
         if save_path is None:
             save_path = self.path / self.makedoc_paths.autodoc_file_name
         with open(save_path, "w+") as f:
@@ -180,6 +202,9 @@ class DirectoryParser(ParserAbstract):
         if recurse:
             for child_dir in self.dir_children:
                 child_dir.save_readme(recurse=True, save_path=save_path)
+        if self.source_parser:
+            self.logger.add_log(ParsingFinishedSuccess(*self._message_args))
+            self.logger.save_log_file()
         return
 
     def update_doc(self, recurse=False) -> None:
@@ -187,12 +212,18 @@ class DirectoryParser(ParserAbstract):
 
         Passes otherwise
         """
+
+        if self.source_parser:
+            self.logger.add_log(ParsingStartsInfo(*self._message_args))
         if self.makedoc_paths.autodoc_file_name in os.listdir(self.path):
             with open(self.path / self.makedoc_paths.autodoc_file_name, "w") as f:
                 f.write(self.get_doc_file_content())
         if recurse:
             for child_dir in self.dir_children:
                 child_dir.update_doc(recurse=True)
+        if self.source_parser:
+            self.logger.add_log(ParsingFinishedSuccess(*self._message_args))
+            self.logger.save_log_file()
         return
 
     def unpack_doc(self, recurse=False) -> None:

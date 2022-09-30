@@ -1,0 +1,8 @@
+{
+    "verbosity": {
+        "print-error": true,
+        "print-info": true,
+        "print-success": true,
+        "print-warning": true
+    }
+}

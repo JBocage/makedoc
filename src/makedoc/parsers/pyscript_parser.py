@@ -3,6 +3,8 @@ Implements a parser class for python scripts
 """
 from typing import List
 
+from makedoc.logging.messages.warnings import EmptyPyFileDocstringWarning
+
 from .concept import FileParserAbstract
 
 
@@ -57,4 +59,9 @@ class PyscriptParser(FileParserAbstract):
                 else:
                     file_beginning_comment_lines.append(line.rstrip())
 
+        self.logger.add_log(
+            EmptyPyFileDocstringWarning(
+                file_path_str=self.partial_path, makedoc_paths=self.makedoc_paths
+            )
+        )
         return []

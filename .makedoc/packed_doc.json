@@ -7,6 +7,10 @@
     "src/makedoc/cli": "# cli\n\nThis is the `cli` directory. It contains all the command line related code.",
     "src/makedoc/cli/commands": "# commands\n\nThis is the `commands` directory. Here, one script should correspond to\none command line command.",
     "src/makedoc/cli/commands/bash_scripts": "# bash_scripts\n\nThis directory contains the bash scripts that are included in the package.\n\n### How to integrate a bash script\n\nIf you wish to add a script here, add the file, and register it in the `setup.py`\nfile.",
+    "src/makedoc/logging": "# logging\n",
+    "src/makedoc/logging/messages": "# messages\n",
+    "src/makedoc/logging/messages/concept": "# concept\n",
     "src/makedoc/parsers": "# parsers\n\nThis is the `parsers` directory. It contains the code that implements various parser\nclasses for walking through the directory files and parsing docs.",
-    "src/makedoc/parsers/concept": "# concept\n\nThe `concept` directory should contain all abstract and base classes for the parsers\nimplemented outside."
+    "src/makedoc/parsers/concept": "# concept\n\nThe `concept` directory should contain all abstract and base classes for the parsers\nimplemented outside.",
+    "src/makedoc/utils": "# utils\n"
 }

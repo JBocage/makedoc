@@ -19,7 +19,9 @@ class SourceDirectoryParser(DirectoryParser):
 
         self.makedoc_paths = MakedocPaths(path)
         self._init_makedoc_file_structure()
-        super(SourceDirectoryParser, self).__init__(path=path, root_path=path)
+        super(SourceDirectoryParser, self).__init__(
+            path=path, root_path=path, makedoc_path=self.makedoc_paths
+        )
 
     def get_partial_path(self) -> str:
         """Returns the partial path of the parser"""
@@ -113,4 +115,18 @@ class SourceDirectoryParser(DirectoryParser):
                     "\n"
                     "pdf\n"
                     "txt\n"
+                )
+
+        if not self.makedoc_paths.config_json.exists():
+            default_config = {
+                "verbosity": {
+                    "print-warning": True,
+                    "print-error": True,
+                    "print-info": True,
+                    "print-success": True,
+                }
+            }
+            with open(self.makedoc_paths.config_json, "w+") as f:
+                json.dump(
+                    default_config, f, sort_keys=True, indent=4, separators=(",", ": ")
                 )

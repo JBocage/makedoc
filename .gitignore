@@ -1,5 +1,6 @@
 # The files that are ignored for files versionning
 venv/
+.makedoc/logs/
 
 *.egg-info*
 *sandbox*
