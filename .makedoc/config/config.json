@@ -1,4 +1,9 @@
 {
+    "parsing": {
+        "python": {
+            "ignore-init-file-level-docstrings": true
+        }
+    },
     "verbosity": {
         "print-error": true,
         "print-info": true,

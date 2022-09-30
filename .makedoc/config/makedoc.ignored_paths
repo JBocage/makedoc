@@ -17,5 +17,7 @@ sandbox
 tmp
 venv
 
+src/makedoc.egg-info
+
 ###################################################
 # AUTO ADDED:

@@ -11,6 +11,7 @@ makedoc/
 │   ├── commands/
 │   │   ├── bash_scripts/
 │   │   ├── __init__.py
+│   │   ├── check.py
 │   │   ├── config.py
 │   │   ├── generate.py
 │   │   ├── init.py
@@ -51,6 +52,7 @@ makedoc/
 
 ## logging
 >
+>The `logging` directory contains all the code relative to logging
 
 ---
 
@@ -63,6 +65,9 @@ makedoc/
 
 ## utils
 >
+>Contains utils functions for the project.
+>
+>This includes a typed dict definition for helping IDE autocompletion when writing code.
 
 ---
 
@@ -134,4 +139,4 @@ makedoc/
 
 
 
-<sub>This doc was automatically generated with makedoc v(0, 0, 1) on  09/30/22 17:31:58 
+<sub>This doc was automatically generated with makedoc v(0, 0, 2) on  09/30/22 18:46:03 
