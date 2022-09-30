@@ -207,6 +207,18 @@ class DirectoryParser(ParserAbstract):
             self.logger.save_log_file()
         return
 
+    def check_parsing(self, recurse=False) -> None:
+        if self.source_parser:
+            self.logger.add_log(ParsingStartsInfo(*self._message_args))
+        _ = self.get_doc_file_content()
+        if recurse:
+            for child_dir in self.dir_children:
+                child_dir.check_parsing(recurse=True)
+        if self.source_parser:
+            self.logger.add_log(ParsingFinishedSuccess(*self._message_args))
+            self.logger.save_log_file()
+        return
+
     def update_doc(self, recurse=False) -> None:
         """Updates the readme file of the directory if it exists.
 

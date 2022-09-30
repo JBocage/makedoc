@@ -1,13 +1,13 @@
 """This file implements a command line interface for launching generators"""
 
 import click
+
+from makedoc import __VERSION__
 from makedoc.cli.commands.pack import pack
 from makedoc.cli.commands.unpack import unpack
 from makedoc.cli.commands.update import update
 
-from makedoc import __VERSION__
-
-from .commands import generate, init, config
+from .commands import check, config, generate, init
 
 
 class Config(object):
@@ -37,6 +37,7 @@ def cli(ctx, *args, **kwargs):
         print(key, type(value), value)
 
 
+cli.add_command(check)
 cli.add_command(config)
 cli.add_command(generate)
 cli.add_command(init)
