@@ -19,17 +19,14 @@ class PyscriptParser(FileParserAbstract):
     def __init__(self, **kwargs):
         super(PyscriptParser, self).__init__(**kwargs)
 
-    def get_parsed_doc(self) -> str:
+    def _get_parsed_doc(self) -> str:
         """Gets the doc for the script
 
         The doc corresponds to the name of the file as a header
         """
-        if self.parsed_doc == "":
-            self.parsed_doc = f"# {self.name}\n"
-            self.parsed_doc += "\n".join(
-                self.get_dynamic_snippet_processed_file_docstrings()
-            )
-        return self.parsed_doc
+        parsed_doc = f"# {self.name}\n"
+        parsed_doc += "\n".join(self.get_dynamic_snippet_processed_file_docstrings())
+        return parsed_doc
 
     def get_file_beginning_comment_lines(self) -> List[str]:
         """Gets the beginning of file docstrings if applicable

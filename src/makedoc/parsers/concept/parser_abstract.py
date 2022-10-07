@@ -25,7 +25,6 @@ class ParserAbstract(ABC):
         self.root_path = root_path
         self.name = str(self.path).split("/")[-1]
 
-        self.parsed_doc: str = ""
         if makedoc_path is None:
             self.makedoc_paths = MakedocPaths(root_path)
         else:
@@ -36,12 +35,18 @@ class ParserAbstract(ABC):
             self.source_parser = True
         self.logger = logger
 
+        self._parsed_doc = None
+
     @abstractmethod
-    def get_parsed_doc(self) -> str:
+    def _get_parsed_doc(self) -> str:
         """Should get the parsed documentation for the path"""
-        if self.parsed_doc == "":
-            self.parsed_doc = ""
-        return self.parsed_doc
+        return ""
+
+    @property
+    def parsed_doc(self) -> str:
+        if self._parsed_doc is None:
+            self._parsed_doc = self._get_parsed_doc()
+        return self._parsed_doc
 
     @abstractproperty
     def file_arborescence_repr(self) -> str:

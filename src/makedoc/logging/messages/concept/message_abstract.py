@@ -32,7 +32,7 @@ class MessageAbstract(object):
         self.time: datetime = datetime.now()
         if isinstance(file_path_str, pathlib.Path):
             file_path_str = file_path_str.as_posix()
-        self.file_path_str = file_path_str
+        self.file_path_str = "./" + file_path_str
         if solution is None:
             solution = self.SOLUTION
         self.solution = solution
@@ -47,6 +47,11 @@ class MessageAbstract(object):
     def line_description(self) -> str:
         """Builds the line description for the message"""
         return f"{self.time_str}  {self.file_path_str}: {self.content}"
+
+    @property
+    def line_solution(self) -> str:
+        """Builds the line solution for the log file"""
+        return f"{self.file_path_str}: {self.solution}"
 
     @property
     def log_file_line(self) -> str:

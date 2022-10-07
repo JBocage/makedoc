@@ -47,7 +47,11 @@ class EmptyDirdocWarning(WarningAbstract):
     """Apprears when a directory documentation is empty"""
 
     CODE: int = 100
-    CONTENT: str = "Empty directory documentation"
-    SOLUTION: str = (
-        "Use makedoc unpack [DIRPATH] to create the dirdoc file and fill it in"
-    )
+
+    def __init__(self, directory_path: str, **kwargs):
+        self.CONTENT = f"Empty documentation for {directory_path}"
+        self.SOLUTION = (
+            f"Call 'makedoc unpack {directory_path}' to create a dirdoc"
+            f"file and fill it. Then run 'makedoc pack {directory_path}' to repack it"
+        )
+        super().__init__(**kwargs)

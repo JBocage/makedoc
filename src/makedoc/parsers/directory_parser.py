@@ -25,6 +25,7 @@ class DirectoryParser(ParserAbstract):
 
         self.dir_children: List[DirectoryParser] = []
         self.file_children: List[FileParserAbstract] = []
+        self._doc_file_content = None
         if not self.is_ignored:
             self._init_packed_doc()
             self._mine_for_doc()
@@ -81,7 +82,7 @@ class DirectoryParser(ParserAbstract):
         self.dir_children.sort(key=lambda x: x.name)
         self.file_children.sort(key=lambda x: x.name)
 
-    def get_parsed_doc(self) -> str:
+    def _get_parsed_doc(self) -> str:
         """Returns the doc for the parser.
         Directory doc is stored in .makedoc/packed_doc.json
         """
@@ -95,50 +96,63 @@ class DirectoryParser(ParserAbstract):
                 packed_doc: Dict[str, str] = json.load(f)
             doc = packed_doc[self.partial_path]
 
-        if doc == "# " + self.name + "\n":
-            self.logger.add_log(EmptyDirdocWarning(*self._message_args))
+        if doc.strip() == "# " + self.name:
+            self.logger.add_log(
+                EmptyDirdocWarning(
+                    directory_path=self.partial_path, **self._message_kwargs
+                )
+            )
         return doc
 
-    def get_doc_file_content(self) -> str:
+    def _get_doc_file_content(self) -> str:
         """Builds the README doc file content automatically"""
 
-        content = ""
+        if self._doc_file_content is None:
+            content = ""
 
-        content += self.get_parsed_doc()
+            content += self.parsed_doc
 
-        content += (
-            "\n"
-            '<hr style="border:2px solid gray"> </hr>\n'
-            "\n"
-            "# Structure\n"
-            "\n"
-            "```\n"
-        )
-        content += self.file_arborescence_repr
-        content += "\n```\n" '<hr style="border:2px solid gray"> </hr>\n' "\n"
+            content += (
+                "\n"
+                '<hr style="border:2px solid gray"> </hr>\n'
+                "\n"
+                "# Structure\n"
+                "\n"
+                "```\n"
+            )
+            content += self.file_arborescence_repr
+            content += "\n```\n" '<hr style="border:2px solid gray"> </hr>\n' "\n"
 
-        for subdir in self.dir_children:
-            subdirdoc = subdir.get_parsed_doc()
-            for line in subdirdoc.split("\n"):
-                if line[:1] == "#":
-                    content += f"#{line}\n"
-                else:
-                    content += f">{line}\n"
-            content += "\n" "---\n" "\n"
-
-        for file in self.file_children:
-            filedoc = file.get_parsed_doc()
-            if filedoc:
-                for line in filedoc.split("\n"):
+            for subdir in self.dir_children:
+                subdirdoc = subdir.parsed_doc
+                for line in subdirdoc.split("\n"):
                     if line[:1] == "#":
                         content += f"#{line}\n"
                     else:
                         content += f">{line}\n"
                 content += "\n" "---\n" "\n"
 
-        content += f'\n\n\n\n<sub>This doc was automatically generated with makedoc v{self.VERSION} on {datetime.datetime.now().strftime(" %D %H:%M:%S ")}'
+            for file in self.file_children:
+                filedoc = file.parsed_doc
+                if filedoc:
+                    for line in filedoc.split("\n"):
+                        if line[:1] == "#":
+                            content += f"#{line}\n"
+                        else:
+                            content += f">{line}\n"
+                    content += "\n" "---\n" "\n"
 
-        return content
+            content += f'\n\n\n\n<sub>This doc was automatically generated with makedoc v{self.VERSION} on {datetime.datetime.now().strftime(" %D %H:%M:%S ")}'
+
+            self._doc_file_content = content
+
+        return self._doc_file_content
+
+    @property
+    def doc_file_content(self) -> str:
+        if self._doc_file_content is None:
+            self._doc_file_content = self._get_doc_file_content()
+        return self._doc_file_content
 
     @property
     def file_arborescence_repr(self) -> str:
@@ -198,19 +212,19 @@ class DirectoryParser(ParserAbstract):
         if save_path is None:
             save_path = self.path / self.makedoc_paths.autodoc_file_name
         with open(save_path, "w+") as f:
-            f.write(self.get_doc_file_content())
+            f.write(self.doc_file_content)
         if recurse:
             for child_dir in self.dir_children:
                 child_dir.save_readme(recurse=True, save_path=save_path)
         if self.source_parser:
-            self.logger.add_log(ParsingFinishedSuccess(*self._message_args))
+            self.logger.add_log(ParsingFinishedSuccess(**self._message_kwargs))
             self.logger.save_log_file()
         return
 
     def check_parsing(self, recurse=False) -> None:
         if self.source_parser:
-            self.logger.add_log(ParsingStartsInfo(*self._message_args))
-        _ = self.get_doc_file_content()
+            self.logger.add_log(ParsingStartsInfo(**self._message_kwargs))
+        _ = self.doc_file_content
         if recurse:
             for child_dir in self.dir_children:
                 child_dir.check_parsing(recurse=True)
@@ -229,7 +243,7 @@ class DirectoryParser(ParserAbstract):
             self.logger.add_log(ParsingStartsInfo(*self._message_args))
         if self.makedoc_paths.autodoc_file_name in os.listdir(self.path):
             with open(self.path / self.makedoc_paths.autodoc_file_name, "w") as f:
-                f.write(self.get_doc_file_content())
+                f.write(self.doc_file_content)
         if recurse:
             for child_dir in self.dir_children:
                 child_dir.update_doc(recurse=True)

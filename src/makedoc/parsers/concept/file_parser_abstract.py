@@ -18,7 +18,7 @@ class FileParserAbstract(ParserAbstract):
         """The hierarchy of a single file is itself."""
         return self.name
 
-    def get_parsed_doc(self) -> str:
+    def _get_parsed_doc(self) -> str:
         """The default doc for a file is empty. The file is ignored"""
         return ""
 
