@@ -1,11 +1,16 @@
 """
 Implements a parser class for python scripts
 """
-from typing import List
+import re
+from typing import Dict, List
 
-from makedoc.logging.messages.warnings import EmptyPyFileDocstringWarning
-
-from .concept import FileParserAbstract
+from makedoc.logging.messages.warnings import (
+    AlreadyBeganDynamicSnippetWarning,
+    EmptyPyFileDocstringWarning,
+    UnclosedDynamicSnippetWarning,
+    UnreferencedDynamicSnippetWarning,
+)
+from makedoc.parsers.concept import FileParserAbstract
 
 
 class PyscriptParser(FileParserAbstract):
@@ -21,7 +26,9 @@ class PyscriptParser(FileParserAbstract):
         """
         if self.parsed_doc == "":
             self.parsed_doc = f"# {self.name}\n"
-            self.parsed_doc += "\n\n".join(self.get_file_beginning_comment_lines())
+            self.parsed_doc += "\n".join(
+                self.get_dynamic_snippet_processed_file_docstrings()
+            )
         return self.parsed_doc
 
     def get_file_beginning_comment_lines(self) -> List[str]:
@@ -71,3 +78,64 @@ class PyscriptParser(FileParserAbstract):
                 )
             )
         return []
+
+    def get_dynamic_snippets(self) -> Dict[str, List[str]]:
+        lines = self.content_txt_lines
+        dynamic_snippets: Dict[str, List[str]] = {}
+        current_snippets: List[str] = []
+        for line in lines:
+            end_captured = re.search("#.*end:([\w\-_]+)", line)
+            if end_captured:
+                for snip_name in end_captured.groups():
+                    if snip_name in current_snippets:
+                        current_snippets.pop(current_snippets.index(snip_name))
+
+            for snip_name in current_snippets:
+                if snip_name in dynamic_snippets.keys():
+                    dynamic_snippets[snip_name].append(line.rstrip())
+                else:
+                    dynamic_snippets[snip_name] = [line.rstrip()]
+
+            begin_captured = re.search("#.*begin:([\w\-_]+)", line)
+            if begin_captured:
+                for snip_name in begin_captured.groups():
+                    if snip_name in current_snippets:
+                        self.logger.add_log(
+                            AlreadyBeganDynamicSnippetWarning(
+                                snippet_ref=snip_name, **self._message_kwargs
+                            )
+                        )
+                    else:
+                        current_snippets.append(snip_name)
+
+        if len(current_snippets) > 0:
+            self.logger.add_log(
+                UnclosedDynamicSnippetWarning(
+                    snippet_ref=snip_name, **self._message_kwargs
+                )
+            )
+
+        return dynamic_snippets
+
+    def get_dynamic_snippet_processed_file_docstrings(self) -> List[str]:
+        docstrings = self.get_file_beginning_comment_lines()
+        dynamic_snippets = self.get_dynamic_snippets()
+        processed_lines = []
+        for line in docstrings:
+            tokens = re.search(r"makedoc-snippet:([\w\-_]+)", line)
+            if tokens:
+                snip_name = tokens.groups()[0]
+                if snip_name not in dynamic_snippets.keys():
+                    self.logger.add_log(
+                        UnreferencedDynamicSnippetWarning(
+                            snippet_ref=snip_name, **self._message_kwargs
+                        )
+                    )
+                else:
+                    processed_lines.append("```python")
+                    processed_lines.extend(dynamic_snippets[snip_name])
+                    processed_lines.append("```")
+            else:
+                processed_lines.append(line + "\n")
+
+        return processed_lines

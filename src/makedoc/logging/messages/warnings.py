@@ -10,6 +10,39 @@ class EmptyPyFileDocstringWarning(WarningAbstract):
     SOLUTION: str = "Fill in the file docstring"
 
 
+class AlreadyBeganDynamicSnippetWarning(WarningAbstract):
+    """Appears when a dynamic snippet starts again inside its own zone"""
+
+    CODE: 102
+
+    def __init__(self, snippet_ref: str, **kwargs):
+        self.CONTENT = f"Dynamic snippet '{snippet_ref}' strats more than once"
+        self.SOLUTION = f"Remove 'begin:{snippet_ref}' tokens until there is only one"
+        super().__init__(**kwargs)
+
+
+class UnclosedDynamicSnippetWarning(WarningAbstract):
+    """Appears when a dynamic snippet never ends"""
+
+    CODE: 103
+
+    def __init__(self, snippet_ref: str, **kwargs):
+        self.CONTENT = f"Dynamic snippet '{snippet_ref}' is never closed"
+        self.SOLUTION = f"Add 'end:{snippet_ref}' where the snippet ends"
+        super().__init__(**kwargs)
+
+
+class UnreferencedDynamicSnippetWarning(WarningAbstract):
+    """Appears when a dynamic snippet never ends"""
+
+    CODE: 104
+
+    def __init__(self, snippet_ref: str, **kwargs):
+        self.CONTENT = f"Dynamic snippet '{snippet_ref}' is not referenced"
+        self.SOLUTION = "Check for all dynamic snippets definitions in the file"
+        super().__init__(**kwargs)
+
+
 class EmptyDirdocWarning(WarningAbstract):
     """Apprears when a directory documentation is empty"""
 

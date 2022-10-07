@@ -2,7 +2,7 @@
 
 import pathlib
 from abc import ABC, abstractmethod, abstractproperty
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from makedoc import __VERSION__
 from makedoc.logging.logger import Logger
@@ -101,3 +101,8 @@ class ParserAbstract(ABC):
     def _message_args(self) -> Tuple[str, MakedocPaths]:
         """Builds the arguments to provide to the messages upon creation"""
         return (self.partial_path, self.makedoc_paths)
+
+    @property
+    def _message_kwargs(self) -> Dict[str, Any]:
+        """Builds the kwargs to provide to the messages upon creation"""
+        return {"file_path_str": self.partial_path, "makedoc_paths": self.makedoc_paths}
