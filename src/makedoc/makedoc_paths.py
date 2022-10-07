@@ -10,7 +10,7 @@ class MakedocPaths:
 
     Attributes:
         logs (pathlib.Path)
-            The path to .makedoc/logs/  # TODO: Implement logging
+            The path to .makedoc/logs/
         config (pathlib.Path)
             The path to .makedoc/config/
         packed_doc (pathlib.Path)
