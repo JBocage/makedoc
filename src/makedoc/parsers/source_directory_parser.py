@@ -119,16 +119,15 @@ class SourceDirectoryParser(DirectoryParser):
 
         if not self.makedoc_paths.config_json.exists():
             default_config = {
-                {
-                    "parsing": {"python": {"ignore-init-file-level-docstrings": True}},
-                    "verbosity": {
-                        "print-error": True,
-                        "print-info": True,
-                        "print-success": True,
-                        "print-warning": True,
-                    },
-                }
+                "parsing": {"python": {"ignore-init-file-level-docstrings": True}},
+                "verbosity": {
+                    "print-error": True,
+                    "print-info": True,
+                    "print-success": True,
+                    "print-warning": True,
+                },
             }
+
             with open(self.makedoc_paths.config_json, "w+") as f:
                 json.dump(
                     default_config, f, sort_keys=True, indent=4, separators=(",", ": ")
